@@ -11,7 +11,7 @@ const getConsignor = async (req, res) => {
             const result = await Consignor.find({
                 $or: [
                   { name: regexQuery },
-                  { phone: !isNaN(search) ? Number(search) : null },
+                //   { phone: !isNaN(search) ? Number(search) : null },
                   { place: regexQuery },
                  
                 ],

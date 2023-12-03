@@ -14,7 +14,6 @@ const getConsignee = async (req, res) => {
             const result = await Consignee.find({
                 $or: [
                   { name: regexQuery },
-                  { phone: !isNaN(search) ? Number(search) : null },
                   { place: regexQuery },
                  
                 ],

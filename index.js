@@ -24,8 +24,6 @@ app.use(
 );
 require("dotenv").config();
 
-console.log(process.env.ORGIN, "erjn");
-
 app.use(
   cors({
     origin: process.env.ORGIN,
