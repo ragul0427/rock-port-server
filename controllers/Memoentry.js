@@ -4,24 +4,21 @@ const Memo = require("../model/memoentry");
 
 const getMemo = async (req, res) => {
     try {
-        const { search } = req.query
-        const regexQuery = { $regex: search, $options: "i" };
-        
-       
-        if (search !== ""){
-            const result = await Memo.find({
-                $or: [
-                  { vehicleno: regexQuery },
+        // const { search } = req.query
+        // const regexQuery = { $regex: search, $options: "i" };
+        // if (search !== ""){
+        //     const result = await Memo.find({
+        //         $or: [
+        //           { vehicleno: regexQuery },
                 
                  
-                ],
-            });
+        //         ],
+        //     });
+        //     return res.status(200).json({ message: result });
+        // } else {
+            const result = await Memo.find()    
             return res.status(200).json({ message: result });
-        } else {
-            const result = await Memo.find()
-           
-            return res.status(200).json({ message: result });
-        }
+        // }
         
     
     } catch (err) {
