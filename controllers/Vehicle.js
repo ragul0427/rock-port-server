@@ -33,11 +33,7 @@ const getVehicle = async (req, res) => {
 
 const createVehicle = async (req, res) => {
     try {
-        // const check=await Vehicle.find({pan:req.body.pan})
-        // console.log(check.length,"jiji")
-        // if(check.length>=3){
-        //     return res.status(500).send({message:`You use this pan no already 10 times...this is ${check.length+1}th time...`})
-        // }
+       
         const result = await Vehicle.create({ ...req.body });
         return res.status(201).send({ message: "Vehicle created successfully" });
     } catch (err) {

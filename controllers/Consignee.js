@@ -2,10 +2,7 @@ const Consignee = require("../model/consignee")
 
 const getConsignee = async (req, res) => {
     try {
-        // authMiddleware(req, res)
-        // console.log(req)
         const { search } = req.query
-        // const regexQuery = { $regex: search, $options: "i" };
 		const regexQuery = new RegExp(search, "i");
         
       

@@ -32,9 +32,7 @@ const getConsignor = async (req, res) => {
 
 const createConsignor = async (req, res) => {   
     try {
-        // await authMiddleware(req, res)
-        // console.log(req.user.userId, "user")
-        // req.body.userId=req.user.userId
+
         const result = await Consignor.create({ ...req.body })
         
         return res.status(200).send({ message: result})
