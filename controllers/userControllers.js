@@ -2,7 +2,9 @@ const User = require("../model/user");
 const jwt = require("jsonwebtoken");
 const Cookies = require("js-cookie");
 const bcrypt = require("bcryptjs");
-const { get } = require("lodash");
+const { get, isEmpty } = require("lodash");
+const otplib = require("otplib");
+const {sendPasswordResetMail}=require("../middleware/sendMailVerification")
 
 const createUser = async (req, res) => {
   try {
@@ -47,21 +49,79 @@ const getUser = async (req, res) => {
       get(findUser, "password", "") || "123"
     );
    
+    console.log(findUser,"user")
     if (findUser && isPasswordValid) {
       const data = findUser._id;
       const token = await jwt.sign({ userId: data }, "abcd1234");
       return res.status(200).send(token);
-    } else if (!isPasswordValid) {
+    }else if(findUser===null){
+      return res.status(500).send({ message: "User does not exits" });
+    }else if (!isPasswordValid) {
       return res.status(500).send({ message: "Incorrect password" });
-    }else if(findUser){
-      return res.status(500).send({ message: "User already exits" });
     }
   } catch (e) {
     console.log(e);
   }
 };
 
+
+const forgotPassword = async (req, res) => {
+  try {
+    const { email } = req.body;
+    const isEmail = await User.findOne({ email });
+    console.log(email,"email")
+
+    if (isEmpty(isEmail)) {
+      return res.status(404).send({ message: "User not found" });
+    } else {
+      const secret = otplib.authenticator.generateSecret();
+      const otp = otplib.authenticator.generate(
+        get(isEmail, "email", ""),
+        "Ecommerce",
+        secret
+      );
+      sendPasswordResetMail(email, otp, secret);
+      if (otp) {
+        return res.status(200).send({ data: otp });
+      } else {
+        return res.status(200).send({ message: "Otp verification failed..." });
+      }
+    }
+  } catch (e) {
+    console.log(e);
+  }
+};
+
+const passwordReset = async (req, res) => {
+  try {
+    const { email, password } = req.body;
+    const isEmail = await User.find({ email });
+    const isPasswordValid = await bcrypt.compare(password, isEmail[0].password);
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(password, salt);
+   
+
+    if (isPasswordValid) {
+      return res.status(404).send({ message: "Try a different password" });
+    }
+
+    if (!isEmail.length) {
+      return res.status(404).send({ message: "Email not found" });
+    }
+
+    await User.findByIdAndUpdate(isEmail[0]._id, {
+      email: email,
+      password: hashedPassword,
+      confirmPassword: hashedPassword,
+    });
+
+    return res.status(200).send({ message: "Password updated successfully" });
+  } catch (e) {}
+};
+
 module.exports = {
   createUser,
   getUser,
+  forgotPassword,
+  passwordReset
 };

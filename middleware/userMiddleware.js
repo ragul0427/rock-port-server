@@ -1,15 +1,13 @@
 const jwt = require("jsonwebtoken");
 
-
 const authenticateToken = (req, res, next) => {
   const token = req.header("Authorization")?.split(" ")[1];
-  console.log(token)
   if (!token) {
     return res.status(401).send("unAuthorized");
   }
 
   try {
-    const decoded = jwt.verify(token, process.env.SECRET_KEY);
+    const decoded = jwt.verify(token, "abcd1234");
     req.user = decoded;
 
     next();
