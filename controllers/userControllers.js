@@ -52,7 +52,7 @@ const getUser = async (req, res) => {
     console.log(findUser,"user")
     if (findUser && isPasswordValid) {
       const data = findUser._id;
-      const token = await jwt.sign({ userId: data }, "abcd1234");
+      const token = await jwt.sign({ userId: data }, process.env.SECRET_KEY);
       return res.status(200).send(token);
     }else if(findUser===null){
       return res.status(500).send({ message: "User does not exits" });
