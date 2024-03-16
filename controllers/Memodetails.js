@@ -3,25 +3,29 @@ const MemoDetails = require("../model/memodetails");
 
 const getMemoDetails = async (req, res) => {
     try {
-        const { search } = req.query
+        const { search,userId } = req.query
         const regexQuery = { $regex: search, $options: "i" };
         
-       
-        if (search !== ""){
-            const result = await MemoDetails.find({
-                $or: [
-                    { gcno: !isNaN(search) ? Number(search) : null },
-                  { vehicleno: !isNaN(search) ? Number(search) : null },
-                  { phoneno: !isNaN(search) ? Number(search) : null },         
-                ],
-            });
-            return res.status(200).json({ message: result });
-        } else {
-            const result = await MemoDetails.find({}); 
+       let query={ $or: [
+        { gcno: !isNaN(search) ? Number(search) : null },
+      { vehicleno: !isNaN(search) ? Number(search) : null },
+      { phoneno: !isNaN(search) ? Number(search) : null },         
+    ]}
+
+    if(userId){
+        query.userId=userId
+    }
+
+    let result;
+        if (search !== ""&&userId!==undefined||null){
+        result = await MemoDetails.find(query);
+            
+        } else if(userId!==undefined||null){
+            await MemoDetails.find({userId}); 
             return res.status(200).json({ message: result });
         }
         
-    
+        return res.status(200).json({ message: result });
     } catch (err) {
       console.error(err);
       return res.status(500).json({ error: "Failed to fetch memoentry" });

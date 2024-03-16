@@ -3,27 +3,32 @@ const Broker = require("../model/broker");
 
 const getBroker = async (req, res) => {
     try {
-        const { search } = req.query
-        const regexQuery = new RegExp(search, "i");
-       
-        if (search !== ""){
-            const result = await Broker.find({
-                $or: [
-                  { brokername: regexQuery }
-                ],
-            });
-            return res.status(200).json({ message: result });
-        } else {
-            const result = await Broker.find(); 
-            return res.status(200).json({ message: result });
-        }
-        
-    
+      const { search, userId } = req.query;
+      const regexQuery = new RegExp(search, "i");
+
+      const query = {
+        $or: [{ brokername: regexQuery }],
+      };
+
+      if (userId) {
+        query.userId = userId;
+      }
+  
+      let result;
+  
+      if (search !== ""&&userId!==undefined||null) {
+        result = await Broker.find(query);
+      } else if(userId!==undefined||null) {
+        result = await Broker.find({ userId });
+      }
+  
+      return res.status(200).json({ message: result });
     } catch (err) {
       console.error(err);
       return res.status(500).json({ error: "Failed to fetch brokers" });
     }
   };
+  
 
 const createBroker = async (req, res) => {
     try {

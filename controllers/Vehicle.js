@@ -3,27 +3,31 @@ const Vehicle = require("../model/vehicle");
 
 const getVehicle = async (req, res) => {
     try {
-        // authMiddleware(req, res)
-        const { search } = req.query
-        // const regexQuery = { $regex: search, $options: "i" };
+        const { search,userId } = req.query
         const regexQuery = new RegExp(search, "i");
         
-       
-        if (search !== ""){
-            const result = await Vehicle.find({
-                $or: [
-                  { drivername: regexQuery },
-                  { vehicleno: !isNaN(search) ? Number(search) : null },
-                  { driverphone: !isNaN(search) ? Number(search) : null },
-                 
-                ],
-            });
-            return res.status(200).json({ message: result });
-        } else {
-            const result = await Vehicle.find(); 
-            return res.status(200).json({ message: result });
+        const query={
+            $or: [
+                { drivername: regexQuery },
+                { vehicleno: !isNaN(search) ? Number(search) : null },
+                { driverphone: !isNaN(search) ? Number(search) : null },
+               
+              ],
         }
-        
+
+        if(userId){
+            query.userId=userId
+        }
+
+        let result;
+       
+        if (search !== ""&&userId!==undefined||null){
+            result = await Vehicle.find(query);
+        } else if(userId!==undefined||null){
+            result = await Vehicle.find({userId}); 
+            
+        }
+        return res.status(200).json({ message: result });
     
     } catch (err) {
       console.error(err);

@@ -3,32 +3,31 @@ const Consignor = require("../model/Consignor")
 
 
 const getConsignor = async (req, res) => {
-    try {
-        const { search } = req.query
-        // const regexQuery = { $regex: search, $options: "i" };
-		const regexQuery = new RegExp(search, "i");
-        if (search !== ""){
-            const result = await Consignor.find({
-                $or: [
-                  { name: regexQuery },
-                //   { phone: !isNaN(search) ? Number(search) : null },
-                  { place: regexQuery },
-                 
-                ],
-            });
-            
-            return res.status(200).json({ message: result });
-        } else {
-            const result = await Consignor.find(); 
-            return res.status(200).json({ message: result });
-        }
-        
-    
-    } catch (err) {
-      console.error(err);
-      return res.status(500).json({ error: "Failed to fetch vehicles" });
+  try {
+    const { search,userId } = req.query;
+    const regexQuery = new RegExp(search, "i");
+    console.log(userId,"consiheor")
+
+    const query = {
+      $or: [{ name: regexQuery }, { place: regexQuery }],
+    };
+    if (userId) {
+      query.userId = userId;
     }
-  };
+    let result;
+    if (search !== ""&&userId!==undefined||null) {
+      result = await Consignor.find(query);
+    } else if(userId!==undefined||null) {
+		result = await Consignor.find({ userId:userId });
+	  }
+    
+
+    return res.status(200).json({ message: result });
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({ error: "Failed to fetch vehicles" });
+  }
+};
 
 const createConsignor = async (req, res) => {   
     try {

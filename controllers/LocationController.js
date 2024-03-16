@@ -3,19 +3,23 @@ const Location = require("../model/location");
 
 const getLocation = async (req, res) => {
     try {
-        const { search } = req.query
+        const { search,userId } = req.query
         const regexQuery = { $regex: search, $options: "i" };
         
-       
-        if (search !== ""){
-            const result = await Location.find({
-                $or: [
-                  { locationname: regexQuery }
-                ],
-            });
+       let query={
+        $or: [
+            { locationname: regexQuery }
+          ],
+       }
+
+       if(userId){
+        query.userId=userId
+       }
+        if (search !== ""&&userId!==undefined||null){
+            const result = await Location.find(query);
             return res.status(200).json({ message: result });
-        } else {
-            const result = await Location.find(); 
+        } else if(userId!==undefined||null){
+            const result = await Location.find({userId}); 
            
             return res.status(200).json({ message: result });
         }

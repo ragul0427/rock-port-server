@@ -1,31 +1,30 @@
 const Consignee = require("../model/consignee")
 
-const getConsignee = async (req, res) => {
-    try {
-        const { search } = req.query
-		const regexQuery = new RegExp(search, "i");
-        
-      
-       
-        if (search !== ""){
-            const result = await Consignee.find({
-                $or: [
-                  { name: regexQuery },
-                  { place: regexQuery },
-                 
-                ],
-            });
-            return res.status(200).json({ message: result });
-        } else {
-            const result = await Consignee.find(); 
-            return res.status(200).json({ message: result });
-        }
-        
-    
-    } catch (err) {
-      console.error(err);
-      return res.status(500).json({ error: "Failed to fetch vehicles" });
-    }
+
+  const getConsignee = async (req, res) => {
+	try {
+	  const { search,userId } = req.query;
+	  const regexQuery = new RegExp(search, "i");
+	  console.log(userId,"userid")
+  
+	  const query = {
+		$or: [{ name: regexQuery }, { place: regexQuery }],
+	  };
+	  if (userId) {
+		query.userId = userId;
+	  }
+	  let result;
+	  if (search !== ""&&userId!==undefined||null) {
+		result = await Consignee.find(query);
+	  } else if(userId!==undefined||null) {
+		result = await Consignee.find({ userId:userId });
+	  }
+  
+	  return res.status(200).json({ message: result });
+	} catch (err) {
+	  console.error(err);
+	  return res.status(500).json({ error: "Failed to fetch vehicles" });
+	}
   };
 
 const createConsignee = async (req, res) => {

@@ -3,18 +3,19 @@ const Memo = require("../model/memoentry");
 
 
 const getMemo = async (req, res) => {
-    try {
-       
-            const result = await Memo.find()    
-            return res.status(200).json({ message: result });
-       
-        
-    
-    } catch (err) {
-     
-      return res.status(500).json({ error: "Failed to fetch memoentry" });
+  try {
+    const { userId } = req.query;
+    let result;
+    if (userId) {
+       result = await Memo.find({userId});
     }
-  };
+
+    return res.status(200).json({ message: result });
+  } catch (err) {
+    console.log(err,"error")
+    return res.status(500).json({ error: "Failed to fetch memoentry" });
+  }
+};
 
 const createMemo = async (req, res) => {
     try {
