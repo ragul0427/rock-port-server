@@ -6,7 +6,6 @@ const getConsignor = async (req, res) => {
   try {
     const { search,userId } = req.query;
     const regexQuery = new RegExp(search, "i");
-    console.log(userId,"consiheor")
 
     const query = {
       $or: [{ name: regexQuery }, { place: regexQuery }],

@@ -5,7 +5,6 @@ const Consignee = require("../model/consignee")
 	try {
 	  const { search,userId } = req.query;
 	  const regexQuery = new RegExp(search, "i");
-	  console.log(userId,"userid")
   
 	  const query = {
 		$or: [{ name: regexQuery }, { place: regexQuery }],

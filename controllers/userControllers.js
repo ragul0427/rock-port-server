@@ -49,7 +49,6 @@ const getUser = async (req, res) => {
       get(findUser, "password", "") || "123"
     );
    
-    console.log(findUser,"user")
     if (findUser && isPasswordValid) {
       const data = findUser._id;
       const token = await jwt.sign({ userId: data }, process.env.SECRET_KEY);
@@ -69,7 +68,7 @@ const forgotPassword = async (req, res) => {
   try {
     const { email } = req.body;
     const isEmail = await User.findOne({ email });
-    console.log(email,"email")
+
 
     if (isEmpty(isEmail)) {
       return res.status(404).send({ message: "User not found" });

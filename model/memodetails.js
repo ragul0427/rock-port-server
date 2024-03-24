@@ -83,7 +83,7 @@ const memodetailsSchema = mongoose.Schema({
 	driverphone: {
 		type: String
 	},
-	driverwhatsappno: {
+	whatsappno: {
 		type: String
 	},
     pan: {
