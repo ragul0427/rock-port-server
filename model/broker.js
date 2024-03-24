@@ -8,6 +8,6 @@ const brokerSchema = mongoose.Schema({
 	userId: {
 		type: String
 	}
-})
+},{ timestamps: true})
 
 module.exports = mongoose.model('broker', brokerSchema)

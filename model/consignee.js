@@ -28,6 +28,6 @@ const consigneeSchema = mongoose.Schema({
 	userId: {
 		type:String
 	}
-})
+},{ timestamps: true})
 
 module.exports = mongoose.model('consignee', consigneeSchema)

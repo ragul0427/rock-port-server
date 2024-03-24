@@ -92,6 +92,6 @@ const memodetailsSchema = mongoose.Schema({
 	rcname: {
 		type: String
 	},
-})
+},{ timestamps: true})
 
 module.exports = mongoose.model('memodetails', memodetailsSchema)

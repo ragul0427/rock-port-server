@@ -20,13 +20,13 @@ const memoSchema = mongoose.Schema({
 	driverphone: {
 		type: String
 	},
-	driverwhatsappno: {
+	whatsappno: {
 		type: String
 	},
 	userId: {
 		type:String
 	},
 	
-})
+},{ timestamps: true})
 
 module.exports = mongoose.model('memo', memoSchema)
