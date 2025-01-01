@@ -48,7 +48,7 @@ const getUser = async (req, res) => {
       password,
       get(findUser, "password", "") || "123"
     );
-   
+   console.log(findUser, isPasswordValid, email)
     if (findUser && isPasswordValid) {
       const data = findUser._id;
       const token = await jwt.sign({ userId: data }, process.env.SECRET_KEY);

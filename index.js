@@ -42,7 +42,7 @@ mongoose
   })
   .then(() => {
     app.listen(process.env.PORT || 5000, () => {
-      console.log("server listening");
+      console.log("server listening", process.env.MONGO_URI);
     });
   })
   .catch((err) => {
